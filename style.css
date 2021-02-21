@@ -1,1 +1,29 @@
+#title {
+text-align: center;
+}
+body{
+    background-color: lightgray;
+}
 
+#board{
+    align-content: center;
+    background-color: blue;
+}
+
+.spot {
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    align-content: center;
+    float: left;
+}
+
+.hole {
+    width: 12px;
+    height:12px;
+    background-color:white;
+    position: relative;
+    top: 6px;
+    left: 6px;
+    border-radius: 50px;
+}
