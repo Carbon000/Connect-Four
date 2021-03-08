@@ -1,6 +1,9 @@
 #title {
 text-align: center;
 }
+#subtitle {
+text-align: center;
+}
 body{
     background-color: lightgray;
 }
@@ -28,4 +31,5 @@ table {
 #clear{
     justify-content: center;
     display: flex;
+    margin: 5px;
 }
