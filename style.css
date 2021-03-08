@@ -21,4 +21,11 @@ body{
 
 table {
     border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#clear{
+    justify-content: center;
+    display: flex;
 }
