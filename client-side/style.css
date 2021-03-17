@@ -27,3 +27,7 @@ table {
     justify-content: center;
     display: flex;
 } 
+
+#winner {
+    text-align: center;
+}
