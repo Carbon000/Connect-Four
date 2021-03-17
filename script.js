@@ -7,9 +7,37 @@ var board = [
         [0,0,0,0,0,0,0]
     ];
 turn = 1;
-function sayHi(id){
-    document.getElementById(id).style.backgroundColor = "red";
-    console.log(id.className);
+gameID = -1;
+function getTurn(){
+    //TODO
+    //Call API to get turn for current gameID
+
+    return turn;
+}
+
+function getGameID(){
+    //TODO
+    //Call API to get random gameID
+
+    return gameID;
+}
+
+function getBoard(){
+    //TODO
+    //Call API to get board state for current gameID
+
+    return board;
+}
+
+window.onload = function(){
+    console.log("Loading complete :)");
+    gameID = getGameID();
+    turn = getTurn();
+    board = getBoard();
+
+    //show game id on page 
+    document.getElementById("gameID").innerHTML = gameID;
+    testStuff();
 }
 
 function insertAt(id){
@@ -110,4 +138,10 @@ function clearBoard(){
             board[i][j] = 0;
         }
     }
+}
+
+async function testStuff(){
+    const response = await fetch("https://api.wheretheiss.at/v1/satellites");
+    const asJSON = await response.json();
+    console.log(asJSON);
 }
