@@ -1,39 +1,73 @@
-var board = [
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0]
-];
-turn = 1;
-gameID = -1;
-function getTurn(){
-    //TODO
-    //Call API to get turn for current gameID
+var board = [];
+var turn = 1;
+var gameID = -1;
 
+async function getTurn(){
+    //TODO
+    // GET /turn
+    //Call API to get turn for current gameID
+    console.log("Game ID:",gameID);
+    const request ={"id": gameID};
+    const response = await fetch("/turn",
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request)
+
+    });
+    const asJson = await response.json();
+    window.turn = asJson;
+    console.log(turn);
     return turn;
 }
 
-function getGameID(){
-    //TODO
-    //Call API to get random gameID
 
-    return gameID;
+
+async function getGameID(){
+    //TODO
+    // GET /id
+    //Call API to get random gameID
+    const response = await fetch("/id",
+    {
+        method: 'GET',
+    });
+    const asJson = await response.json();
+    // gameID = await asJson.id;
+    // console.log("What's this",gameID);
+
+    return await asJson;
 }
 
-function getBoard(){
+async function getBoard(){
     //TODO
+    // Post /board
     //Call API to get board state for current gameID
+    const request ={"id": window.gameID};
+    const response = await fetch("/board",
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request)
+
+    });
+    const asJson = await response.json();
+    window.board = asJson;
+    console.log(board);
 
     return board;
+
 }
 
 window.onload = function(){
     console.log("Loading complete :)");
-    gameID = getGameID();
-    turn = getTurn();
-    board = getBoard();
+    console.log(getGameID());
+    console.log("Game ID onload",gameID);
+    // turn = getTurn();
+    // board = getBoard();
 
     //show game id on page 
     document.getElementById("gameID").innerHTML = gameID;
