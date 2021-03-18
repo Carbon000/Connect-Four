@@ -6,7 +6,6 @@ async function getTurn(){
     //TODO
     // GET /turn
     //Call API to get turn for current gameID
-    console.log("Game ID:",gameID);
     const request ={"id": gameID};
     const response = await fetch("/turn",
     {
@@ -18,33 +17,15 @@ async function getTurn(){
 
     });
     const asJson = await response.json();
-    window.turn = asJson;
-    console.log(turn);
-    return turn;
+    turn = asJson;
 }
 
-
-
-async function getGameID(){
-    //TODO
-    // GET /id
-    //Call API to get random gameID
-    const response = await fetch("/id",
-    {
-        method: 'GET',
-    });
-    const asJson = await response.json();
-    // gameID = await asJson.id;
-    // console.log("What's this",gameID);
-
-    return await asJson;
-}
 
 async function getBoard(){
     //TODO
     // Post /board
     //Call API to get board state for current gameID
-    const request ={"id": window.gameID};
+    const request ={"id": gameID};
     const response = await fetch("/board",
     {
         method: 'POST',
@@ -55,26 +36,36 @@ async function getBoard(){
 
     });
     const asJson = await response.json();
-    window.board = asJson;
-    console.log(board);
-
-    return board;
+    board = asJson;
 
 }
+
+async function getGameID(){
+    //TODO
+    // GET /id
+    //Call API to get random gameID
+    const response = await fetch("/id",
+    {
+        method: 'GET',
+    });
+    const asJson = await response.json();
+    gameID = await asJson.id;
+    // console.log("What's this",gameID);
+    document.getElementById("gameID").innerHTML = gameID;
+    getTurn();
+    getBoard();
+
+    // return await asJson;
+}
+
 
 window.onload = function(){
     console.log("Loading complete :)");
-    console.log(getGameID());
-    console.log("Game ID onload",gameID);
-    // turn = getTurn();
-    // board = getBoard();
-
-    //show game id on page 
-    document.getElementById("gameID").innerHTML = gameID;
-    testStuff();
+    getGameID();
 }
 
 function insertAt(id) {
+    console.log("Game ID onload",gameID);
     let column = Number(id.charAt(1));
     let i = -1;
     for (i = 0; i < board.length; i++) {
@@ -90,16 +81,12 @@ function insertAt(id) {
         var checkwin = checkWinState(board);
         if (checkwin == 1) {
             console.log("Yellow Win!");
-            //alert("Yellow Win!");
-            //window.open("modeless.htm","Yellow Win","width = 300,height = 200,alwaysRaised = yes");
             document.getElementById("winner").innerHTML = "Yellow Win!";
-            // document.getElementById("myModal").style.display = "block";
         }
 
         if (checkwin == -1) {
             console.log("Red Win!");
             document.getElementById("winner").innerHTML = "Red Win!";
-            // document.getElementById("myModal").style.display = "block";
         }
 
     } else {
@@ -195,8 +182,24 @@ function clearBoard() {
     }
 }
 
-async function testStuff(){
-    const response = await fetch("https://api.wheretheiss.at/v1/satellites");
-    const asJSON = await response.json();
-    console.log(asJSON);
+function drawBoard(){
+    //Go through each chip and set its color
+    
+    //if 0 then white
+    //if 1 then red
+    // if -1 then yellow
+    // [row][column] ex row 1 column 3 = 13
+    for(let i = 0; i < 6; i++){
+        for(let i = 0; i < 6; i++){
+            if(board[i][j] == 0){
+                document.getElementById(i+""+j).style.backgroundColor = "white";
+            } else if(board[i][j] == 1){
+                document.getElementById(i+""+j).style.backgroundColor = "red";
+            } else if(board[i][j] == -1){
+                document.getElementById(i+""+j).style.backgroundColor = "yellow";
+            }
+        }
+    }
+
+    
 }

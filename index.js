@@ -59,6 +59,12 @@ app.post("/board", function(request, response){
     response.status(200);
 });
 
+app.post("/placechip", function(request, response){
+    let index = request.body.id;
+    response.json(database[index].turn);
+    response.status(200);
+
+});
 /*
 IDs     boards      turn    used
 sequilize
