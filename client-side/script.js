@@ -1,6 +1,7 @@
 var board = [];
 var turn = 1;
 var gameID = -1;
+var bWin = 0;
 
 async function getTurn(){
     //TODO
@@ -58,129 +59,99 @@ async function getGameID(){
     // return await asJson;
 }
 
+async function inputchip(colnum){
+    const request ={"id": gameID,"column":colnum};
+    const response = await fetch("/placechip",
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request)
+
+    });
+    const asJson = await response.json();
+    if(response.status == 200)
+    {
+        board = asJson.board;
+        turn = asJson.turn;
+        bWin = asJson.win;
+        updateBoard(board);
+        if (bWin == 1) {
+            console.log("Yellow Win!");
+            document.getElementById("winner").innerHTML = "Red Win!";
+        }
+
+        if (bWin == -1) {
+            console.log("Red Win!");
+            document.getElementById("winner").innerHTML = "Yellow Win!";
+        }
+    }
+    else{
+        console.log("Failed:" + response.status);
+        console.log("error: " + asJson.error);
+    }
+    
+}
+
 
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
 }
 
-function insertAt(id) {
-    console.log("Game ID onload",gameID);
-    let column = Number(id.charAt(1));
-    let i = -1;
-    for (i = 0; i < board.length; i++) {
-        if (board[i][column] != 0) {
-            break;
-        }
-    }
-    i--;
-    if (i != -1) {
-        board[i][column] = turn;
-        turn *= -1;
-        changeColor(i + "" + column, turn);
-        var checkwin = checkWinState(board);
-        if (checkwin == 1) {
-            console.log("Yellow Win!");
-            document.getElementById("winner").innerHTML = "Yellow Win!";
-        }
 
-        if (checkwin == -1) {
-            console.log("Red Win!");
-            document.getElementById("winner").innerHTML = "Red Win!";
-        }
-
-    } else {
-        console.log("Invalid, column is full");
-    }
-}
-function changeColor(id, whichTurn) {
-    if (whichTurn == 1) {
-        document.getElementById(id).style.backgroundColor = "red";
-    }
-    if (whichTurn == -1) {
-        document.getElementById(id).style.backgroundColor = "yellow";
-    }
-}
-function checkWinState(data)
-{
-    var nrow = data.length;
-    var ncol = data[0].length;
-    var checksum = 0;
-    //check row
-    for(var i = 0 ; i < nrow ; i++)
-    {        
-        for(var j = 3; j < ncol ; j++)
-        {
-            checksum = 0;
-            for(var k = 0 ; k < 4 ;k++)
-                checksum += data[i][j-k];
-            if(checksum == 4)
-                return 1;
-            if(checksum == -4)
-                return -1;
-        }
-    }
-
-    //check column
-    for(var i = 0 ; i < ncol ; i++)
-    {        
-        for(var j = 3; j < nrow ; j++)
-        {
-            checksum = 0;
-            for(var k = 0 ; k < 4 ;k++)
-                checksum += data[j-k][i];
-            if(checksum == 4)
-                return 1;
-            if(checksum == -4)
-                return -1;
-        }
-    }
-    //check right top -> bottom left
-    for(var i = 0 ; i < ncol -3  ; i++)
-    {        
-        for(var j = 3; j < nrow ; j++)
-        {
-            checksum = 0;
-            for(var k = 0 ; k < 4 ;k++)
-                checksum += data[j-k][i+k];
-            if(checksum == 4)
-                return 1;
-            if(checksum == -4)
-                return -1;
-        }
-    }
-    //check left top ->  right bottom
-    for(var i = 3 ; i < nrow ; i++)
-    {
-        for(var j = 3 ; j < ncol ; j++)
-        {
-            checksum = 0;
-            for(var k = 0 ; k < 4 ; k++)
-            {
-                checksum += data[i-k][j-k];
+function updateBoard(board_) {
+    
+    for (i = 0; i < board_.length; i++) {
+        for(var j = 0 ; j < board_[0].length ; j++)
+        {   
+            let whichTurn = board_[i][j];
+            let id = i + "" + j;
+            if (whichTurn == 1) {
+                document.getElementById(id).style.backgroundColor = "red";
             }
-            if(checksum == 4)
-                return 1;
-            if(checksum == -4)
-                return -1;
+            else if (whichTurn == -1) {
+                document.getElementById(id).style.backgroundColor = "yellow";
+            }
+            else{
+                document.getElementById(id).style.backgroundColor = "white";
+            }
+            
         }
+        
     }
-
-    return 0;
-
+    
 }
 
-function clearBoard() {
-    console.log("clearin...");
-    turn = 1;
-    document.getElementById("myModal").style.display = "none";
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board.length; j++) {
-            document.getElementById("" + i + "" + j).style.backgroundColor = "white";
-            board[i][j] = 0;
-        }
-    }
+
+async function clearBoard(){
+    //TODO
+    // GET /id
+    //Call API to get random gameID
+
+    const request ={"id": gameID};
+    const response = await fetch("/clear",
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request)
+
+    });
+    
+    const asJson = await response.json();
+    board = asJson;
+    updateBoard(board);
+    document.getElementById("winner").innerHTML = "Hello";
+    
+    
+
+    // return await asJson;
 }
+
+
 
 function drawBoard(){
     //Go through each chip and set its color
