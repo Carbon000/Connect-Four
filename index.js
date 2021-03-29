@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 app.use(express.static("client-side"));
 app.use(express.json());
-app.listen(3000,()=> {console.log("Running....")} );
+const PORT = process.env.PORT || 3000
+app.listen(PORT,()=> {console.log("Running....")} );
 
 
 
