@@ -174,3 +174,9 @@ function drawBoard(){
 
     
 }
+
+function inputID(){
+    gameID = document.getElementById("id-input").value;
+    document.getElementById("gameID").innerHTML = gameID;
+
+}
