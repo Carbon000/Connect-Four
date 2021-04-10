@@ -60,6 +60,11 @@ async function getGameID(){
 }
 
 async function inputchip(colnum){
+    var audio = new Audio('click.mp3');
+    audio.play();
+    
+
+
     const request ={"id": gameID,"column":colnum};
     const response = await fetch("/placechip",
     {
@@ -144,7 +149,7 @@ async function clearBoard(){
     const asJson = await response.json();
     board = asJson;
     updateBoard(board);
-    document.getElementById("winner").innerHTML = "Hello";
+    document.getElementById("winner").innerHTML = "";
     
     
 

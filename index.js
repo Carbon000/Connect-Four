@@ -1,4 +1,5 @@
 const express = require('express');
+const Datasore = require('nedb');
 const app = express();
 app.use(express.static("client-side"));
 app.use(express.json());
@@ -22,6 +23,8 @@ function giveBoard(){
 const MAX_SIZE = 100000000;
 database  = {
 };
+// const database = new Datasore("games.db");
+// database.loadDatabase();
 
 function makeGameSession(){
     let seed = Math.ceil(Math.random()*MAX_SIZE);
@@ -34,9 +37,6 @@ function makeGameSession(){
 ///////////////////////////////////////////////////////
 app.post("/turn", function(request, response){
     let index = request.body.id;
-    console.log("Turn");
-    console.log(database);
-    console.log(index);
     response.json(database[index].turn);
     response.status(200);
 
@@ -53,20 +53,18 @@ app.get("/id", function(request, response){
 
 app.post("/board", function(request, response){
     let index = request.body.id;
-    console.log("Board");
-    console.log(database);
-    console.log(index);
-    
     response.json(database[index].board);
     response.status(200);
 });
 
 app.post("/clear", function(request, response){
     let index = request.body.id;
-    console.log("Board");
-    console.log(database);
-    console.log(index);
     database[index].board = giveBoard();
+    for(i=0; i < database[index].board.length; i++){
+        for(j=0; j < database[index].board[i].length; j++){
+            database[index].board[i][j] = 0;
+        }
+    }
     response.json(database[index].board);
     response.status(200);
 });
