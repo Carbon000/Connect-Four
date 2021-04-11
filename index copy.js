@@ -21,76 +21,102 @@ function giveBoard(){
 }
 
 const MAX_SIZE = 100000000;
+database  = {
+};
+// const database = new Datasore("games.db");
+// database.loadDatabase();
 
-const database = new Datasore("games.db");
-database.loadDatabase();
 function makeGameSession(){
     let seed = Math.ceil(Math.random()*MAX_SIZE);
-    let data = {
-        _id: seed, 
-        board: giveBoard(),
-        turn: 1
+    if(database[seed] == undefined){
+       database[seed] = {'id': seed, 'board': giveBoard(), 'turn': 1,'win':0,'current_row':-1};
+    } else if(database.length < MAX_SIZE){
+        makeGameSession();
     }
-    
-    database.insert(data, function(err, document){
-        if(err){
-            makeGameSession();
-        }
-    });
-    return seed;
 }
-
 ///////////////////////////////////////////////////////
 app.post("/turn", function(request, response){
     let index = request.body.id;
-    database.find({_id: index}, function(err, data){
-        response.json(data[0].turn);
-        response.status(200);
-    });
+    response.json(database[index].turn);
+    response.status(200);
+
 });
 
 app.get("/id", function(request, response){
-    let id = makeGameSession();
-    response.json({"id": id});
+    makeGameSession();
+    let place = Math.floor(Math.random() * Object.keys(database).length);
+    let index = Object.keys(database)[place];
+    response.json({"id": index});
     response.status(200);
-    console.log(id);
+
 });
 
 app.post("/board", function(request, response){
     let index = request.body.id;
-    database.find({_id: index}, function(err, data){
-        response.json(data[0].board);
-        response.status(200);
-        console.log(data[0].board);
-    });
+    response.json(database[index].board);
+    response.status(200);
 });
 
 app.post("/clear", function(request, response){
     let index = request.body.id;
-    database.update({_id: index},{$set: {board: giveBoard()}},{upsert: true},function(err,num,upsrt){
+    database[index].board = giveBoard();
+    for(i=0; i < database[index].board.length; i++){
+        for(j=0; j < database[index].board[i].length; j++){
+            database[index].board[i][j] = 0;
+        }
+    }
+    response.json(database[index].board);
     response.status(200);
-    })
 });
 
 app.post("/placechip", function(request, response){
     let index = request.body.id;
-    let column = request.body.column;
+    let column1 = request.body.column;
     let currentdata = database[index];
-
-    database.find({_id: index}, function (err, response){
-        let gameboard = response[0].board
-
-        for (let i = gameboard.length -1; i >= 0; i--) {
-            if (gameboard[i][column] == 0){
-                gameboard[i][column] = response[0].turn
+    
+    if(currentdata.win != 0)
+    {
+        
+        response.json({"error":"game over"});
+        response.status(202);
+    }
+    else
+    {    
+        let nextturn = currentdata.turn *(-1) ;    
+        
+        let column = Number(column1.charAt(1));
+        let i = -1;
+        for (i = 0; i < currentdata.board.length; i++) {
+            if (currentdata.board[i][column] != 0) {
+                break;
             }
         }
-        database.update({_id: index},{$set: {board: gameboard, turn: response[0].turn * -1}},{upsert: true},function(){})
-    })
-    database.find({_id: index}, function(err, data){
-        response.json(data[0])
+        
+        i--;
+        if (i != -1) {
+            currentdata.board[i][column] = nextturn;
+
+            
+            
+            currentdata.win = checkWinState(currentdata.board);
+            
+
+        } else {
+            console.log("Invalid, column is full");
+        }
+        
+        currentdata.turn = nextturn;
+        response.json(currentdata);
         response.status(200);
-    })
+        
+        database[index] =  currentdata;
+        
+    }
+        
+    
+    
+    
+
 });
 
 function checkWinState(data)
@@ -162,6 +188,6 @@ function checkWinState(data)
 
 }
 /*
-IDs     boards    turn    used
+IDs     boards      turn    used
 sequilize
 */
