@@ -53,7 +53,6 @@ app.get("/id", function(request, response){
     let id = makeGameSession();
     response.json({"id": id});
     response.status(200);
-    console.log(id);
 });
 
 app.post("/board", function(request, response){
@@ -61,7 +60,6 @@ app.post("/board", function(request, response){
     database.find({_id: index}, function(err, data){
         response.json(data[0].board);
         response.status(200);
-        console.log(data[0].board);
     });
 });
 
@@ -74,22 +72,21 @@ app.post("/clear", function(request, response){
 
 app.post("/placechip", function(request, response){
     let index = request.body.id;
-    let column = request.body.column;
-    let currentdata = database[index];
+    let column = Number.parseInt(request.body.column);
 
-    database.find({_id: index}, function (err, response){
-        let gameboard = response[0].board
-
+    database.find({_id: index}, function (err, data){
+        let gameboard = data[0].board
         for (let i = gameboard.length -1; i >= 0; i--) {
             if (gameboard[i][column] == 0){
-                gameboard[i][column] = response[0].turn
+                gameboard[i][column] = data[0].turn
+                break;
             }
         }
-        database.update({_id: index},{$set: {board: gameboard, turn: response[0].turn * -1}},{upsert: true},function(){})
-    })
-    database.find({_id: index}, function(err, data){
-        response.json(data[0])
-        response.status(200);
+        database.update({_id: index},{$set: {board: gameboard, turn: data[0].turn * -1}},{upsert: true},function(){})
+        database.find({_id: index}, function(err, data){
+            response.json(data[0])
+            response.status(200);
+        });
     })
 });
 

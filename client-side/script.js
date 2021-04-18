@@ -62,8 +62,6 @@ async function getGameID(){
 async function inputchip(colnum){
     var audio = new Audio('click.mp3');
     audio.play();
-    
-
 
     const request ={"id": gameID,"column":colnum};
     const response = await fetch("/placechip",
@@ -99,10 +97,11 @@ async function inputchip(colnum){
     
 }
 
-
+//Trying to get board to refresh over and over
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
+    setInterval(getBoard, 1000);
 }
 
 
@@ -134,7 +133,6 @@ async function clearBoard(){
     //TODO
     // GET /id
     //Call API to get random gameID
-
     const request ={"id": gameID};
     const response = await fetch("/clear",
     {
@@ -150,10 +148,6 @@ async function clearBoard(){
     board = asJson;
     updateBoard(board);
     document.getElementById("winner").innerHTML = "";
-    
-    
-
-    // return await asJson;
 }
 
 
