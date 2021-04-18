@@ -62,7 +62,7 @@ async function getGameID(){
 async function inputchip(colnum){
     var audio = new Audio('click.mp3');
     audio.play();
-
+    colnum = colnum[1];
     const request ={"id": gameID,"column":colnum};
     const response = await fetch("/placechip",
     {
@@ -80,15 +80,15 @@ async function inputchip(colnum){
         turn = asJson.turn;
         bWin = asJson.win;
         updateBoard(board);
-        if (bWin == 1) {
-            console.log("Yellow Win!");
-            document.getElementById("winner").innerHTML = "Red Win!";
-        }
+        // if (bWin == 1) {
+        //     console.log("Yellow Win!");
+        //     document.getElementById("winner").innerHTML = "Red Win!";
+        // }
 
-        if (bWin == -1) {
-            console.log("Red Win!");
-            document.getElementById("winner").innerHTML = "Yellow Win!";
-        }
+        // if (bWin == -1) {
+        //     console.log("Red Win!");
+        //     document.getElementById("winner").innerHTML = "Yellow Win!";
+        // }
     }
     else{
         console.log("Failed:" + response.status);
