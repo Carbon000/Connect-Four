@@ -58,8 +58,16 @@ app.get("/id", function(request, response){
 app.post("/board", function(request, response){
     let index = request.body.id;
     database.find({_id: index}, function(err, data){
-        response.json(data[0].board);
-        response.status(200);
+        if(data.length != 0){
+            console.log("Successful for",index,"which is a",typeof index);
+            console.log(data);
+            response.json(data[0].board);
+            response.status(200);
+        } else {
+            console.log("Failed for",index,"which is a",typeof index);
+            response.json();
+            response.status(404);
+        }
     });
 });
 
@@ -72,8 +80,10 @@ app.post("/clear", function(request, response){
 
 app.post("/placechip", function(request, response){
     let index = request.body.id;
+    index = parseInt(index);
     let column = Number.parseInt(request.body.column);
 
+    console.log(index,"which is a",typeof index);
     database.find({_id: index}, function (err, data){
         let gameboard = data[0].board
         for (let i = gameboard.length -1; i >= 0; i--) {
@@ -89,7 +99,7 @@ app.post("/placechip", function(request, response){
                 "turn": data[0].turn,
                 "win": checkWinState(data[0].board)
             };
-            console.log();
+            console.log("Placed chip for",index);
             response.json(output)
             response.status(200);
         });

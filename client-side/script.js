@@ -7,7 +7,7 @@ async function getTurn(){
     //TODO
     // GET /turn
     //Call API to get turn for current gameID
-    const request ={"id": gameID};
+    const request ={"id": parseInt(gameID)};
     const response = await fetch("/turn",
     {
         method: 'POST',
@@ -26,7 +26,7 @@ async function getBoard(){
     //TODO
     // Post /board
     //Call API to get board state for current gameID
-    const request ={"id": gameID};
+    const request ={"id": parseInt(gameID)};
     const response = await fetch("/board",
     {
         method: 'POST',
@@ -63,7 +63,8 @@ async function inputchip(colnum){
     var audio = new Audio('click.mp3');
     audio.play();
     colnum = colnum[1];
-    const request ={"id": gameID,"column":colnum};
+    console.log(gameID,colnum);
+    const request ={"id": parseInt(gameID),"column":colnum};
     const response = await fetch("/placechip",
     {
         method: 'POST',
@@ -132,7 +133,7 @@ async function clearBoard(){
     //TODO
     // GET /id
     //Call API to get random gameID
-    const request ={"id": gameID};
+    const request ={"id": parseInt(gameID)};
     const response = await fetch("/clear",
     {
         method: 'POST',
@@ -176,5 +177,5 @@ function drawBoard(){
 function inputID(){
     gameID = document.getElementById("id-input").value;
     document.getElementById("gameID").innerHTML = gameID;
-
+    getBoard();
 }
