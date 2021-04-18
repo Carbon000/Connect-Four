@@ -101,7 +101,7 @@ async function inputchip(colnum){
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
-    setInterval(getBoard, 1000);
+    // setInterval(getBoard, 1000);
 }
 
 
