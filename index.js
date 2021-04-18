@@ -84,7 +84,13 @@ app.post("/placechip", function(request, response){
         }
         database.update({_id: index},{$set: {board: gameboard, turn: data[0].turn * -1}},{upsert: true},function(){})
         database.find({_id: index}, function(err, data){
-            response.json(data[0])
+            let output = {
+                "board": data[0].board,
+                "turn": data[0].turn,
+                "win": checkWinState(data[0].board)
+            };
+            console.log();
+            response.json(output)
             response.status(200);
         });
     })

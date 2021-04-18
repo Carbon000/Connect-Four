@@ -79,10 +79,11 @@ async function inputchip(colnum){
         board = asJson.board;
         turn = asJson.turn;
         bWin = asJson.win;
+        console.log(asJson);
         updateBoard(board);
         // if (bWin == 1) {
         //     console.log("Yellow Win!");
-        //     document.getElementById("winner").innerHTML = "Red Win!";
+            document.getElementById("winner").innerHTML = bWin;
         // }
 
         // if (bWin == -1) {
@@ -101,7 +102,7 @@ async function inputchip(colnum){
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
-    // setInterval(getBoard, 1000);
+    setInterval(getBoard, 1000);
 }
 
 
