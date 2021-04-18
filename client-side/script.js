@@ -81,15 +81,13 @@ async function inputchip(colnum){
         bWin = asJson.win;
         console.log(asJson);
         updateBoard(board);
-        // if (bWin == 1) {
-        //     console.log("Yellow Win!");
-            document.getElementById("winner").innerHTML = bWin;
-        // }
+        if (bWin == 1) {
+            document.getElementById("winner").innerHTML = "Red Wins!";
+        }
 
-        // if (bWin == -1) {
-        //     console.log("Red Win!");
-        //     document.getElementById("winner").innerHTML = "Yellow Win!";
-        // }
+        if (bWin == -1) {
+            document.getElementById("winner").innerHTML = "Yellow Wins!";
+        }
     }
     else{
         console.log("Failed:" + response.status);
