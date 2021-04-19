@@ -44,8 +44,13 @@ function makeGameSession(){
 app.post("/turn", function(request, response){
     let index = request.body.id;
     database.find({_id: index}, function(err, data){
-        response.json(data[0].turn);
-        response.status(200);
+        if(data.length != 0){
+            response.json(data[0].turn);
+            response.status(200);
+        } else {
+            response.json();
+            response.status(404);
+        }
     });
 });
 
