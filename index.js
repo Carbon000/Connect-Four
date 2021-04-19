@@ -59,8 +59,14 @@ app.post("/board", function(request, response){
     let index = request.body.id;
     database.find({_id: index}, function(err, data){
         if(data.length != 0){
-            response.json(data[0].board);
+            let output = {
+                "board": data[0].board,
+                "win": checkWinState(data[0].board)
+            };
+            response.json(output)
             response.status(200);
+            // response.json(data[0].board);
+            // response.status(200);
         } else {
             response.json();
             response.status(404);

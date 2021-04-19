@@ -38,7 +38,8 @@ async function getBoard(){
 
     });
     const asJson = await response.json();
-    board = asJson;
+    board = asJson.board;
+    bWin = asJson.win;
 
 }
 
@@ -61,7 +62,7 @@ async function getGameID(){
 }
 
 async function inputchip(colnum){
-    if(userTurn != turn){
+    if(userTurn != turn || bWin != 0){
         return;
     }
     var audio = new Audio('click.mp3');
@@ -84,15 +85,9 @@ async function inputchip(colnum){
         board = asJson.board;
         turn = asJson.turn;
         bWin = asJson.win;
+        setWinner();
         console.log(asJson);
         updateBoard(board);
-        if (bWin == 1) {
-            document.getElementById("winner").innerHTML = "Red Wins!";
-        }
-
-        if (bWin == -1) {
-            document.getElementById("winner").innerHTML = "Yellow Wins!";
-        }
     }
     else{
         console.log("Failed:" + response.status);
@@ -101,10 +96,25 @@ async function inputchip(colnum){
     
 }
 
+function setWinner(){
+    if (bWin == 1) {
+        document.getElementById("winner").innerHTML = "Red Wins!";
+    }
+
+    if (bWin == -1) {
+        document.getElementById("winner").innerHTML = "Yellow Wins!";
+    }
+
+    if (bWin == 0) {
+        document.getElementById("winner").innerHTML = "";
+    }
+}
+
 function refresh(){
     getBoard();
     getTurn();
     updateBoard(board);
+    setWinner();
 }
 //Trying to get board to refresh over and over
 window.onload = function(){
@@ -156,7 +166,7 @@ async function clearBoard(){
     const asJson = await response.json();
     board = asJson;
     updateBoard(board);
-    document.getElementById("winner").innerHTML = "";
+    bWin = 0;
 }
 
 
