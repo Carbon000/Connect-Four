@@ -2,6 +2,7 @@ var board = [];
 var turn = 1;
 var gameID = -1;
 var bWin = 0;
+var userTurn = 1;
 
 async function getTurn(){
     //TODO
@@ -60,6 +61,9 @@ async function getGameID(){
 }
 
 async function inputchip(colnum){
+    if(userTurn != turn){
+        return;
+    }
     var audio = new Audio('click.mp3');
     audio.play();
     colnum = colnum[1];
@@ -97,11 +101,16 @@ async function inputchip(colnum){
     
 }
 
+function refresh(){
+    getBoard();
+    getTurn();
+    updateBoard(board);
+}
 //Trying to get board to refresh over and over
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
-    setInterval(getBoard, 1000);
+    setInterval(refresh, 1000);
 }
 
 
@@ -178,4 +187,5 @@ function inputID(){
     gameID = document.getElementById("id-input").value;
     document.getElementById("gameID").innerHTML = gameID;
     getBoard();
+    userTurn = -1;
 }
