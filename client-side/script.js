@@ -117,6 +117,7 @@ function refresh(){
     setWinner();
 }
 //Trying to get board to refresh over and over
+
 window.onload = function(){
     console.log("Loading complete :)");
     getGameID();
