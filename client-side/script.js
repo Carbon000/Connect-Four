@@ -3,6 +3,8 @@ var turn = 1;
 var gameID = -1;
 var bWin = 0;
 var userTurn = 1;
+var player1Color = "red";
+var player2Color = "yellow";
 
 async function getTurn(){
     //TODO
@@ -98,11 +100,11 @@ async function inputchip(colnum){
 
 function setWinner(){
     if (bWin == 1) {
-        document.getElementById("winner").innerHTML = "Red Wins!";
+        document.getElementById("winner").innerHTML = "Player1 Wins!";
     }
 
     if (bWin == -1) {
-        document.getElementById("winner").innerHTML = "Yellow Wins!";
+        document.getElementById("winner").innerHTML = "Player2 Wins!";
     }
 
     if (bWin == 0) {
@@ -110,11 +112,18 @@ function setWinner(){
     }
 }
 
+function showTurn(){
+    document.getElementById("turn-value").innerHTML =" " + (turn == 1? "Player1": "Player2");
+    document.getElementById("turn-value").style.color = (turn == 1? player1Color: player2Color);
+}
 function refresh(){
     getBoard();
     getTurn();
     updateBoard(board);
     setWinner();
+    showTurn();
+    player1Color = document.getElementById("player1-color").value;
+    player2Color = document.getElementById("player2-color").value;
 }
 //Trying to get board to refresh over and over
 
@@ -133,10 +142,10 @@ function updateBoard(board_) {
             let whichTurn = board_[i][j];
             let id = i + "" + j;
             if (whichTurn == 1) {
-                document.getElementById(id).style.backgroundColor = "red";
+                document.getElementById(id).style.backgroundColor = player1Color;
             }
             else if (whichTurn == -1) {
-                document.getElementById(id).style.backgroundColor = "yellow";
+                document.getElementById(id).style.backgroundColor = player2Color;
             }
             else{
                 document.getElementById(id).style.backgroundColor = "white";
@@ -171,32 +180,10 @@ async function clearBoard(){
 }
 
 
-
-function drawBoard(){
-    //Go through each chip and set its color
-    
-    //if 0 then white
-    //if 1 then red
-    // if -1 then yellow
-    // [row][column] ex row 1 column 3 = 13
-    for(let i = 0; i < 6; i++){
-        for(let i = 0; i < 6; i++){
-            if(board[i][j] == 0){
-                document.getElementById(i+""+j).style.backgroundColor = "white";
-            } else if(board[i][j] == 1){
-                document.getElementById(i+""+j).style.backgroundColor = "red";
-            } else if(board[i][j] == -1){
-                document.getElementById(i+""+j).style.backgroundColor = "yellow";
-            }
-        }
-    }
-
-    
-}
-
 function inputID(){
     gameID = document.getElementById("id-input").value;
     document.getElementById("gameID").innerHTML = gameID;
     getBoard();
     userTurn = -1;
+    document.getElementById("id-input").value = "";
 }

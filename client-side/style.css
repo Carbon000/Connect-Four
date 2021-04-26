@@ -48,3 +48,11 @@ input {
 h4 {
     margin-bottom: 0px;
 }
+
+#select-color {
+    display: inline;
+}
+
+#turn {
+    margin: 0;
+}
