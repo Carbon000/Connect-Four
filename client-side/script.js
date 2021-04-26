@@ -99,12 +99,12 @@ async function inputchip(colnum){
 }
 
 function setWinner(){
-    if (bWin == 1) {
-        document.getElementById("winner").innerHTML = "Player1 Wins!";
+    if (bWin == userTurn) {
+        document.getElementById("winner").innerHTML = "You win!";
     }
 
-    if (bWin == -1) {
-        document.getElementById("winner").innerHTML = "Player2 Wins!";
+    if (bWin != userTurn) {
+        document.getElementById("winner").innerHTML = "Opponent wins!";
     }
 
     if (bWin == 0) {
@@ -113,7 +113,7 @@ function setWinner(){
 }
 
 function showTurn(){
-    document.getElementById("turn-value").innerHTML =" " + (turn == 1? "Player1": "Player2");
+    document.getElementById("turn-value").innerHTML =" " + (turn == userTurn? "You": "Opponent");
     document.getElementById("turn-value").style.color = (turn == 1? player1Color: player2Color);
 }
 function refresh(){
